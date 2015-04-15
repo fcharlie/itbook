@@ -230,8 +230,11 @@ S      stuff/squawk        # 这个文件已经跳转到了分支
 Subversion 路线图：          
 ![svnroadmap][1]
 
-###Git内幕
-Git对文件较敏感，存在工作目录的文件都会被Git及时的发现，并且要求用户添加到暂存区
+###Git的困惑
+实际上git-scm网站已经把git的实现讲的清清楚楚，如果再多的去描述git如何如何，那样意义也不大，换个角度，研究git与svn差异已经兼容性实现倒可以扯几句。   
+Git对文件修改更加较敏感，存在工作目录的文件都会被Git及时的发现，并且要求用户添加到暂存区。
+而对subversion来说，这一切是惰性的，如果目录中有一个文件没有被纳入版本控制也没有被排除，svn会消极的对待它。  当文件已经被纳入版本控制，文件被修改后提交，svn可以直接commit,而git每次都需要添加修改到暂存区。然后再修改。
+
 Git版本控制中目录不作为一个单独的对象被添加到仓库，工作目录下的目录至少得找到一个文件才会被纳入版本控制。
 
 实际上来说，由于Git的特性，直接支持大文件是不切实际的，但办法不是没有，目前Github已经开源了一个git扩展 [git-lfs](https://github.com/github/git-lfs) 实现Git的大文件托管。
@@ -240,24 +243,25 @@ Git版本控制中目录不作为一个单独的对象被添加到仓库，工�
 如果要从源码去研究GIT是如何实现的，没有久经考验之前，我会选择libgit2，开源中国软件收录了libgit2: [http://www.oschina.net/p/libgit2/](http://www.oschina.net/p/libgit2/) 。
 
 Git Object type 
->typedef enum {
->	GIT_OBJ_ANY = -2,		/**< Object can be any of the following */            
->	GIT_OBJ_BAD = -1,		/**< Object is invalid. */          
->	GIT_OBJ__EXT1 = 0,		/**< Reserved for future use. */           
->	GIT_OBJ_COMMIT = 1,		/**< A commit object. */       
->	GIT_OBJ_TREE = 2,		/**< A tree (directory listing) object. */           
->	GIT_OBJ_BLOB = 3,		/**< A file revision object. */         
->	GIT_OBJ_TAG = 4,		/**< An annotated tag object. */        
->	GIT_OBJ__EXT2 = 5,		/**< Reserved for future use. */        
->	GIT_OBJ_OFS_DELTA = 6, /**< A delta, base is given by an offset. */         
->	GIT_OBJ_REF_DELTA = 7, /**< A delta, base is given by object id. */          
+
+>typedef enum {           
+>	GIT_OBJ_ANY = -2,		 
+>	GIT_OBJ_BAD = -1,		 
+>	GIT_OBJ__EXT1 = 0,	      
+>	GIT_OBJ_COMMIT = 1,		  
+>	GIT_OBJ_TREE = 2,		       
+>	GIT_OBJ_BLOB = 3,		  
+>	GIT_OBJ_TAG = 4,		 
+>	GIT_OBJ__EXT2 = 5,		 
+>	GIT_OBJ_OFS_DELTA = 6,       
+>	GIT_OBJ_REF_DELTA = 7,    
 >} git_otype;           
 
 Git Ref type:    
 >typedef enum {       
->	GIT_REF_INVALID = 0, /**< Invalid reference */       
->	GIT_REF_OID = 1, /**< A reference which points at an object id */            
->	GIT_REF_SYMBOLIC = 2, /**< A reference which points at another reference */             
+>	GIT_REF_INVALID = 0,          
+>	GIT_REF_OID = 1,           
+>	GIT_REF_SYMBOLIC = 2,          
 >	GIT_REF_LISTALL = GIT_REF_OID|GIT_REF_SYMBOLIC,          
 >} git_ref_t;          
 
