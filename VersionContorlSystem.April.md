@@ -96,7 +96,8 @@ svn传输主要的命令有
 Subversion的HTTP协议使用WebDAV。
   * RFC 2518  (WebDAV)
   * RFC 3253  (DeltaV)   
- WebDAV是HTTP 1.1的扩展协议，但它一种复杂的难以解析的协议，所以完全支持WebDAV的服务器并不多，更遑论DeltaV。支持WebDAV的有IIS,Apache httpd。Nginx只部分支持WebDAV，编译参数--with-http_dav_module 而Github上有nginx模块，支持WebDAV的PROPFIND和OPTIONS方法：[nginx-dav-ext-module](https://github.com/arut/nginx-dav-ext-module)。  
+  
+WebDAV是HTTP 1.1的扩展协议，但它一种复杂的难以解析的协议，所以完全支持WebDAV的服务器并不多，更遑论DeltaV。支持WebDAV的有IIS,Apache httpd。Nginx只部分支持WebDAV，编译参数--with-http_dav_module 而Github上有nginx模块，支持WebDAV的PROPFIND和OPTIONS方法：[nginx-dav-ext-module](https://github.com/arut/nginx-dav-ext-module)。  
 
 WebDAV与Subversion结合使得问题变得较为复杂，使用其他服务器，比如Nginx,WebDAV的方法要额外实现。有人在Nginx右键列表曾经咨询过，支持SVN需要
 > full WebDAV support          
@@ -148,7 +149,7 @@ SVN的URL或许带有特殊的关键字，这些对应特定的操作，关键�
 
 <code>
 log-report
-----------
+
 
 Purpose: Retrieve the log <span class="hljs-keyword">for</span> a portion of the repository.
 
@@ -191,9 +192,9 @@ Response:
   &lt;/S:log-report&gt;
 </code>
 
- 按照我的尿性，我是不愿意去解析这些鬼的。如果使用JSON，解析起来要方便的多。
+按照我的尿性，我是不愿意去解析这些鬼的。如果使用JSON，解析起来要方便的多。
  
- Subversion具体的WebDAV协议内容地址如下：
+Subversion具体的WebDAV协议内容地址如下：
 [http://svn.apache.org/repos/asf/subversion/trunk/notes/http-and-webdav/webdav-protocol](http://svn.apache.org/repos/asf/subversion/trunk/notes/http-and-webdav/webdav-protocol)
 
 随着HTTP 2.0的发布，SVN开发者也开始思考移除WebDAV，使用HTTP 2.0完全取代WebDAV. 
@@ -307,6 +308,10 @@ Git Submodule:
 >} git_submodule_update_t;        
 
 
+如果你要从一次commit拿到一个特定的文件，我会选择，先拿到commit id，然后找到root tree-entry的object id,从这个tree entry拿到指定path的tree-entry id,查看文件类型git_tree_entry_filemode_raw，如果是个blob,就使用git_blob_rawcontent查看文件内容。
+
+
+事实上，也不要对libgit2抱有太高的期望，毕竟libgit2 1.0遥遥无期，而官方的git还在快速迭代，标准也在不断的调整。
 
 ###Subversion
 Subversion经过多年的努力，基本上已经取代了CVS，在集中式版本控制领域完全没有敌手，然而危机却会透过密不透风的墙,最大的危机来自思想的巨变。
